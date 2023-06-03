@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:csv/csv.dart';
 import '../models/item.dart';
@@ -9,14 +8,13 @@ class CsvService {
     final List<List<dynamic>> csvTable =
         const CsvToListConverter().convert(csvData);
 
-    List<Item> items = [];
-    for (final row in csvTable) {
-      final item = Item(
-        name: row[0],
-        category: row[1],
-      );
-      items.add(item);
-    }
+    final items = csvTable
+        .skip(1)
+        .map((row) => Item(
+              name: row[0].toString(),
+              category: row[1].toString(),
+            ))
+        .toList();
 
     return items;
   }
