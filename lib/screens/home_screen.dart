@@ -43,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void searchItems(String value) {
-    print(value);
     setState(() {
       filteredItems = items
           .where((item) =>
@@ -51,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
               item.desription.toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
-    print(filteredItems.length);
   }
 
   void clearSearch() {
