@@ -10,8 +10,8 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(item.name),
-        subtitle: Text(item.category),
+        title: Text(item.materialNo),
+        subtitle: Text(item.desription),
       ),
     );
   }
