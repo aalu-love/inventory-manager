@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/item.dart';
 import 'package:flutter_application_1/screens/detail_screen.dart';
 import 'package:flutter_application_1/services/csv_service.dart';
 import 'package:flutter_application_1/widgets/item_card.dart';
+import 'package:path_provider/path_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -62,6 +65,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> openFilePicker() async {
     final filePath = await csvService.openFilePicker();
     if (filePath != null) {
+      fetchItemsFromCSV();
+    }
+  }
+
+  void csvClean() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/appsheet.csv');
+    final bool fileExists = await csvService.checkCsvFileExistence();
+    if (fileExists) {
+      await file.delete();
       fetchItemsFromCSV();
     }
   }
@@ -127,6 +140,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: const Text('Select CSV File'),
               onTap: openFilePicker,
+            ),
+            ListTile(
+              title: const Text('Clean CSV File'),
+              onTap: csvClean,
             ),
             const ListTile(
               title: Text(
