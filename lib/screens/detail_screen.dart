@@ -17,15 +17,6 @@ class _DetailScreenState extends State<DetailScreen> {
     super.initState();
   }
 
-  //   final String materialNo;
-  // final String desription;
-  // final String binNo;
-  // final String valueStock;
-  // final String avgPrice;
-  // final String value;
-  // final String uom;
-  // final String storageLoc;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -108,6 +108,35 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
         ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'SAP STORE',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Select CSV File'),
+              onTap: openFilePicker,
+            ),
+            const ListTile(
+              title: Text(
+                'Created by: Sanju Bodra',
+              ),
+            ),
+            // Add more ListTile widgets for additional items
+          ],
+        ),
+      ),
       body: isFileSelected
           ? FutureBuilder<List<Item>>(
               future: csvService.fetchItemsFromCSV(),

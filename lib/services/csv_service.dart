@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_application_1/models/item.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class CsvService {
   Future<List<Item>> fetchItemsFromCSV() async {
@@ -31,7 +33,7 @@ class CsvService {
 
   Future<bool> checkCsvFileExistence() async {
     final Directory directory = await getApplicationDocumentsDirectory();
-    final File file = File('${directory.path}/appsheet.csv');
+    final File file = File(path.join(directory.path, 'appsheet.csv'));
     return file.exists();
   }
 
@@ -48,15 +50,19 @@ class CsvService {
     );
 
     if (result != null && result.files.isNotEmpty) {
-      final Directory directory = await getApplicationDocumentsDirectory();
       final String filePath = result.files.single.path!;
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final String destinationPath = path.join(directory.path, 'appsheet.csv');
 
-      // Copy the selected file to the desired location
-      final File file =
-          await File(filePath).copy('${directory.path}/appsheet.csv');
-      return file.path;
+      try {
+        await File(filePath).copy(destinationPath);
+        return destinationPath;
+      } catch (e) {
+        log('Error copying file: $e');
+        return null;
+      }
     }
-    return null; // Return null if file is not selected or bytes is null
+    return null;
   }
 
   Future<String> readFile(String filePath) async {
