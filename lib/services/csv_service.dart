@@ -13,7 +13,7 @@ class CsvService {
     if (fileExists) {
       final String csvData = await loadCsvFile();
       final List<List<dynamic>> csvTable =
-          const CsvToListConverter().convert(csvData);
+          const CsvToListConverter().convert(csvData, eol: "\n");
       final List<Item> items = processCsvData(csvTable);
       return items;
     } else {
@@ -22,7 +22,7 @@ class CsvService {
       if (filePath != null) {
         final String csvData = await readFile(filePath);
         final List<List<dynamic>> csvTable =
-            const CsvToListConverter().convert(csvData);
+            const CsvToListConverter().convert(csvData, eol: "\n");
         final List<Item> items = processCsvData(csvTable);
         return items;
       } else {
