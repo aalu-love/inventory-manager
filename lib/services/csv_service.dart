@@ -81,14 +81,14 @@ class CsvService {
     const int storageLoc = 7;
     final List<Item> items = csvTable.skip(1).map((row) {
       return Item(
-        materialNo: row[materialNo].toString(),
-        desription: row[desription].toString(),
-        binNo: row[binNo].toString(),
-        valueStock: row[valueStock].toString(),
-        avgPrice: row[avgPrice].toString(),
-        value: row[value].toString(),
-        uom: row[uom].toString(),
-        storageLoc: row[storageLoc].toString(),
+        materialNo: row[materialNo]?.toString() ?? 'N/A',
+        desription: row[desription]?.toString() ?? '',
+        binNo: row[binNo]?.toString() ?? '',
+        valueStock: row[valueStock]?.toString() ?? '',
+        avgPrice: row[avgPrice]?.toString() ?? '',
+        value: row[value]?.toString() ?? '',
+        uom: row[uom]?.toString() ?? '',
+        storageLoc: row[storageLoc]?.toString() ?? '',
         // Add any other properties as required based on your CSV file structure
       );
     }).toList();
