@@ -13,7 +13,7 @@ class CsvService {
     if (fileExists) {
       final String csvData = await loadCsvFile();
       final List<List<dynamic>> csvTable =
-          const CsvToListConverter().convert(csvData);
+          const CsvToListConverter().convert(csvData, eol: "\n");
       final List<Item> items = processCsvData(csvTable);
       return items;
     } else {
@@ -22,7 +22,7 @@ class CsvService {
       if (filePath != null) {
         final String csvData = await readFile(filePath);
         final List<List<dynamic>> csvTable =
-            const CsvToListConverter().convert(csvData);
+            const CsvToListConverter().convert(csvData, eol: "\n");
         final List<Item> items = processCsvData(csvTable);
         return items;
       } else {
@@ -81,14 +81,14 @@ class CsvService {
     const int storageLoc = 7;
     final List<Item> items = csvTable.skip(1).map((row) {
       return Item(
-        materialNo: row[materialNo].toString(),
-        desription: row[desription].toString(),
-        binNo: row[binNo].toString(),
-        valueStock: row[valueStock].toString(),
-        avgPrice: row[avgPrice].toString(),
-        value: row[value].toString(),
-        uom: row[uom].toString(),
-        storageLoc: row[storageLoc].toString(),
+        materialNo: row[materialNo]?.toString() ?? 'N/A',
+        desription: row[desription]?.toString() ?? '',
+        binNo: row[binNo]?.toString() ?? '',
+        valueStock: row[valueStock]?.toString() ?? '',
+        avgPrice: row[avgPrice]?.toString() ?? '',
+        value: row[value]?.toString() ?? '',
+        uom: row[uom]?.toString() ?? '',
+        storageLoc: row[storageLoc]?.toString() ?? '',
         // Add any other properties as required based on your CSV file structure
       );
     }).toList();
