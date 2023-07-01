@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import '../models/item.dart';
+import 'package:flutter/material.dart';
 
 class ItemCard extends StatelessWidget {
   final Item item;
@@ -11,7 +11,7 @@ class ItemCard extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(item.materialNo),
-        subtitle: Text(item.desription),
+        subtitle: Text(item.description),
       ),
     );
   }
