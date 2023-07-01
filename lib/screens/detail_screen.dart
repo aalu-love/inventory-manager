@@ -1,6 +1,6 @@
+import '../models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widgets/label_Item.dart';
-import '../models/item.dart';
 
 class DetailScreen extends StatefulWidget {
   final Item item;
@@ -33,7 +33,7 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
             LabelValueFormField(
               label: 'Category',
-              initialValue: widget.item.desription,
+              initialValue: widget.item.description,
             ),
             LabelValueFormField(
               label: 'Bin Number',
@@ -41,16 +41,16 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
             LabelValueFormField(
               label: 'Value Stock',
-              initialValue: widget.item.valueStock,
+              initialValue: widget.item.valStock,
             ),
             LabelValueFormField(
-              label: 'Average Price',
-              initialValue: widget.item.avgPrice,
+              label: 'Max Price',
+              initialValue: widget.item.maxPrice,
             ),
-            LabelValueFormField(
-              label: 'Value',
-              initialValue: widget.item.value,
-            ),
+            // LabelValueFormField(
+            //   label: 'Value',
+            //   initialValue: widget.item.value,
+            // ),
             LabelValueFormField(
               label: 'UOM',
               initialValue: widget.item.uom,
