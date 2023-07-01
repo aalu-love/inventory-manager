@@ -41,8 +41,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.1"
-<<<<<<< HEAD
-=======
   crypto:
     dependency: transitive
     description:
@@ -51,8 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
->>>>>>> eee20f4f64c320c6adb64a70b4a458c3d5a3cc91
->>>>>>> 5b656a0744e0a0071b25aa15716dced3653efbe4
   csv:
     dependency: "direct main"
     description:
