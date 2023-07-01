@@ -1,11 +1,10 @@
-import 'dart:io';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/apis/api.dart';
 import 'package:flutter_application_1/models/item.dart';
-import 'package:flutter_application_1/screens/detail_screen.dart';
-import 'package:flutter_application_1/services/csv_service.dart';
 import 'package:flutter_application_1/widgets/item_card.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_application_1/screens/detail_screen.dart';
+import 'package:flutter_application_1/screens/loading_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,44 +14,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CsvService csvService = CsvService();
   List<Item> items = [];
   List<Item> filteredItems = [];
   TextEditingController searchController = TextEditingController();
   bool isSearching = false;
-  bool isFileSelected = false; // Tracks if a file is selected or not
+  late bool isLoading; // Tracks if a file is selected or not
 
   @override
   void initState() {
     super.initState();
-    fetchItemsFromCSV();
+    setLoadingState(true);
+    fetchData();
   }
 
-  Future<void> fetchItemsFromCSV() async {
-    final bool fileExists = await csvService.checkCsvFileExistence();
+  void fetchData() {
+    APIService.fetchData('/').then((response) {
+      setData(response);
+      setLoadingState(false);
+    }).catchError((onError) {
+      log(onError);
+      setLoadingState(false);
+    });
+  }
 
-    if (fileExists) {
-      final fetchedItems = await csvService.fetchItemsFromCSV();
-      setState(() {
-        items = fetchedItems;
-        filteredItems = fetchedItems;
-        isFileSelected = true;
-      });
-    } else {
-      setState(() {
-        isFileSelected = false;
-      });
-    }
+  void setData(String data) {
+    setState(() {
+      items = parseItems(data);
+      filteredItems = items;
+    });
   }
 
   void searchItems(String value) {
-    setState(() {
-      filteredItems = items
-          .where((item) =>
-              item.materialNo.toLowerCase().contains(value.toLowerCase()) ||
-              item.desription.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
+    if (items.isNotEmpty) {
+      setState(() {
+        filteredItems = items
+            .where((item) =>
+                item.materialNo.toLowerCase().contains(value.toLowerCase()) ||
+                item.description.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+      });
+    }
   }
 
   void clearSearch() {
@@ -62,21 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> openFilePicker() async {
-    final filePath = await csvService.openFilePicker();
-    if (filePath != null) {
-      fetchItemsFromCSV();
-    }
+  setLoadingState(bool state) {
+    setState(() {
+      isLoading = state;
+    });
   }
 
-  void csvClean() async {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final File file = File('${directory.path}/appsheet.csv');
-    final bool fileExists = await csvService.checkCsvFileExistence();
-    if (fileExists) {
-      await file.delete();
-      fetchItemsFromCSV();
-    }
+  Future refetch() async {
+    setLoadingState(true);
+    fetchData();
   }
 
   @override
@@ -124,8 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
+          children: const <Widget>[
+            DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
@@ -138,65 +133,52 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              title: const Text('Select CSV File'),
-              onTap: openFilePicker,
-            ),
-            ListTile(
-              title: const Text('Clean CSV File'),
-              onTap: csvClean,
-            ),
-            const ListTile(
               title: Text(
                 'Created by: Sanju Bodra',
               ),
             ),
-            // Add more ListTile widgets for additional items
           ],
         ),
       ),
-      body: isFileSelected
-          ? FutureBuilder<List<Item>>(
-              future: csvService.fetchItemsFromCSV(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: filteredItems.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailScreen(item: filteredItems[index]),
-                            ),
+      body: isLoading
+          ? const Center(
+              child: LoadingScreen(),
+            )
+          : Scaffold(
+              body: RefreshIndicator(
+                onRefresh: refetch,
+                child: items.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: filteredItems.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailScreen(item: filteredItems[index]),
+                                ),
+                              );
+                            },
+                            child: items.isNotEmpty
+                                ? ItemCard(item: filteredItems[index])
+                                : const Center(child: Text("No items")),
                           );
                         },
-                        child: ItemCard(item: filteredItems[index]),
-                      );
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Error fetching data'),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('No file selected.'),
-                  ElevatedButton(
-                    onPressed: openFilePicker,
-                    child: const Text('Select File'),
-                  ),
-                ],
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: ListView.builder(
+                            itemCount: 1,
+                            itemBuilder: (context, index) => const Text(
+                              "No items",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                      ),
               ),
             ),
     );
