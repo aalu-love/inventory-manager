@@ -25,12 +25,12 @@ class Item {
     return Item(
       id: json['_id'].toString(),
       uom: json['uom'].toString(),
-      binNo: json['binNo'].toString(),
+      binNo: json['binNo.'].toString(),
       valStock: json['valStock'].toString(),
       maxPrice: json['maxPrice'].toString(),
       materialNo: json['material no.'].toString(),
       description: json['description'].toString(),
-      storageLoc: json['storage loc'].toString(),
+      storageLoc: json['storageLoc'].toString(),
     );
   }
 }
