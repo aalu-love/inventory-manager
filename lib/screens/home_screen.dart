@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/apis/api.dart';
 import 'package:flutter_application_1/models/item.dart';
+import 'package:flutter_application_1/screens/about_screen.dart';
 import 'package:flutter_application_1/widgets/item_card.dart';
 import 'package:flutter_application_1/screens/detail_screen.dart';
 import 'package:flutter_application_1/screens/loading_screen.dart';
@@ -78,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: isSearching
             ? TextField(
                 controller: searchController,
@@ -117,10 +119,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       drawer: Drawer(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.zero)),
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const <Widget>[
-            DrawerHeader(
+          children: <Widget>[
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
@@ -132,9 +136,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            ListTile(
-              title: Text(
-                'Created by: Sanju Bodra',
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyDeveloperAboutPage(),
+                  ),
+                );
+              },
+              child: const ListTile(
+                title: Text('About'),
+                leading: Icon(Icons.info),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MyDeveloperAboutPage(),
+                  ),
+                );
+              },
+              child: const ListTile(
+                title: Text('Machine Excel'),
+                leading: Icon(Icons.book_online_outlined),
               ),
             ),
           ],
