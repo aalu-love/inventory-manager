@@ -9,8 +9,14 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: ListTile(
-        title: Text(item.materialNo),
+        title: Text(
+          item.materialNo,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         subtitle: Text(item.description),
       ),
     );
